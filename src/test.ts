@@ -33,11 +33,10 @@ x = ["string",10]
 function returnAny(message: any): any{
   console.log(message)
 }
-
-const any1 = returnAny("리턴값")
+returnAny("리턴값")
 
 //unknown
-declare const maybe: unknown
+let maybe: unknown
 
 //const aNumber: number = maybe
 if(maybe === true)
@@ -56,3 +55,21 @@ if(maybe === "string")
 }
 
 //never
+function error(message: string): never{
+  throw new Error(message)
+}
+
+function fail(message: string): never{
+  return error("failed")
+}
+
+function infiniteLoop(): never{
+  while(true){}
+}
+
+//void
+function returnVoid(message: string){
+  console.log(message)
+  return// 생략 가능
+}
+returnVoid('리턴 없음')
