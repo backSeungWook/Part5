@@ -16,6 +16,9 @@ npx tsc --init
 ## TypeScript
 structural type system - 구조가 같으면, 같은 타입.
 
+---
+</br>
+
 ## TypeScript 자료형
 ### primitive Type  
 `number, string, boolean, bigint, symbol, null, undefined`  
@@ -91,6 +94,8 @@ never에는 그 어떤 것도 할당 할 수 없음.(any 포함)
 잘못된 타입을 넣는 실수를 막고자 할 때 사용.
 - void
 리턴타입 
+---
+</br>
 
 ## 타입 호환성
 1. 타입이 같거나 서브 타입인 경우(`공변`) => 할당 가능
@@ -108,6 +113,8 @@ another ='StringOrNumber'
 type PersonTuple: [string , number]
 let another2: PersonTuple =['String',100]
 ```
+---
+</br>
 
 ## tsconfig.json
 http://json.schemastore.org/tsconfig  
@@ -146,3 +153,147 @@ target 이 'es6' 이면, 디폴트로 dom, es6, dom.iterable, scripthost 를 사
 ​lib 를 지정하면 지정 된 라이브러리들만 사용하니다.
 
 - outFile,rootDir tsconfig.json 속성 값 참조.
+---
+</br>
+
+## Interfaces
+- optional property  
+  1. `?` : 변수뒤에 ? 붙었을 때는 이 매개 변수 로 받을 수도 있고 안받을수도 있다.
+  1. [index] : 이 변수에는 어떤한 변수명이 들어와도 상관하지 않겠다  
+  ex)`[index: string]` : any : `index`안에는 값이 string배열이기 때문에 여러개의 변수가 들어올수 있음  
+  또한 데이터는 any이기 때문에 어떠한 형태로도 들어올수 있다.
+      ```ts
+      interface Person3{
+        name: string,
+        age?:number //age라는 값이 있을 수도 없을수도 있을 때
+        [index: string]: any // array 구현 방법 : [index: number]: string
+      }
+      const p31:Person3=
+      {
+        name: "Name",
+        age: 30
+      }
+      const p32:Person3=
+      {
+        name: "Name2",
+        systers:['Sung',"Chan"],
+        foather:p31
+      }
+      ```
+- 내장 함수
+인터베이스 안에 함수를 내장.
+  ```ts
+  //ex)
+  interface Person4{
+    name: string,
+    age:number,
+    hello(): void
+    
+  }
+  //함수구현 사용법1
+  const p41: Person4 = {
+    name: 'Mark2',
+    age:30,
+    hello: function(): void{
+      console.log(`안녕하세요P4! ${this.name} 입니다.`)
+    }
+  }
+  //함수구현 사용법2
+  const p42: Person4 = {
+    name: 'Mark2',
+    age:30,
+    hello(): void{
+      console.log(`안녕하세요P4! ${this.name} 입니다.`)
+    }
+  }
+  ```
+- 클래스
+객체지향 OOP 구현 가능 생성 및 활용 예제는 interface.ts 예제 확인.
+
+- 상속
+interface.ts 상속 예제 확인.
+
+- 함수 인터페이스
+  ```ts
+  interface HelloPerson{
+    (name: string,age?: number): void
+  }
+
+  //에러 발생 함수가 (name: string,age?: number) 형태가 아니기 때문
+  //helloPerson(name: string, age?: number | undefined): void
+  const helloPerson: HelloPerson = function(name: string, age: number)
+  {
+    console.log(`안녕하세요! ${name} 입니다.`)
+  }
+  ```
+
+- readonly : `데이터를 지정 후 변경 시킬 수 없음` (Java final == readonly)
+
+- Declaration Merging 기능은 type alias에서는 불가능 하고 인터페이스에서 만 가능  
+Declaration Merging: 인터페이스의 이름이 같으면 같은 인터페이스안에 있는 type은 합쳐서 사용 할 수 있음
+
+---
+</br>
+
+## CLASS
+▷ OOP를 위한 초석이며 사용자가 만드는 타입의 일종 es6 부터 사용가능
+- 이름은 보통 대문자로 시작한다.
+- new 키워드를 사용하여 object를 만들수 있다.
+- constructor(생성자)를 이용하여 object를 생성하면서 값을 전달 할 수 있음.
+- 생성자에서 this 키워드를 사용하여 해당 object를 가리킬 수 있다.
+- es5로 컴파일 시 function 으로 변경된다.
+### ▷ constructor(생성자)
+생성자에서는 async(비동기 함수)를 설정 할 수 없음.
+
+### ▷ initialize(초기화)
+키워드 : !  
+ex) `name!:string => 나중에 초기화 시키겠다. //(name:string => ERR)`
+
+### ▷ 접근 제어자(Access Modifiers)
+생성자에서 접근제어자 부여 시 this.age = age 와 동일 
+키워드 | 설 명 |  |
+--|--|--
+public | 외부에서 호출 가능 | 기본값
+private | 외부에서 호출 불가능 | 변수 앞에 _</br>(언더바)
+protected|상속받은 클래스에서만||
+
+
+### ▷ Set or Get
+```ts
+class SetGetPerson{
+  public constructor(public name: string, private age: number){}
+  //get
+  get getName(){
+    return this.name
+  }
+
+  set setName(n: string){
+    this.name=n
+  }
+}
+const sgp1 = new SetGetPerson("SetGet",0)
+console.log(sgp1.getName)
+sgp1.setName = "Update"
+console.log(sgp1.getName)
+```
+
+### ▷ 개체데이터 동적 할당(index)
+```ts
+class Students{
+  [index: string]: string
+  //=> 값 2개만 들어와야 한다면 [index: string]: string
+  //대신 [index: string]: "M" | "F"
+}
+
+const a = new Students
+a.mark = "male"
+a.alex = "female"
+```
+
+### ▷ static (Java static 개념과 동일)
+---
+### ▷ 추상화(Abstarct) 클래스
+new 키워드 사용하여 생성 할 수 없음  
+추상화 클래스를 상속 받아 추상화 클래스들을 구현 해야 함.
+
+## Generics
