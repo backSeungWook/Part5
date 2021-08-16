@@ -297,3 +297,50 @@ new 키워드 사용하여 생성 할 수 없음
 추상화 클래스를 상속 받아 추상화 클래스들을 구현 해야 함.
 
 ## Generics
+어떠한 클래스 혹은 함수에서 사용할 타입을 그 함수나 클래스를 사용할 때 결정하는 프로그래밍 기법
+참고 문헌 - https://hyunseob.github.io/2017/01/14/typescript-generic/
+```ts
+//기본 문법
+function helloGeneric<T>(message: T): T{
+  return message
+}
+
+//function helloGeneric<"Mark">(message: "Mark"): "Mark"
+console.log(helloGeneric('Mark'))
+//function helloGeneric<0>(message: 0): 0
+console.log(helloGeneric(0))
+let tboolean:boolean = true
+//function helloGeneric<true>(message: true): true
+console.log(helloGeneric(tboolean))
+
+//Array
+function helloArray<T>(message: T[]):T{
+  return message[0]
+}
+
+//Tuple
+function helloTuple<T,K>(message:[T,K]):T{
+  return message[0]
+}
+
+//interface 활용하여 함수에 적용
+interface GenericInterface{
+  <T>(message: T):T
+}
+const GenericInterface2:GenericInterface = <T>(msg:T):T=> msg
+//===
+const GenericInterface22:GenericInterface = <T>(msg:T):T=> {
+  return msg
+}
+
+//Class 적용
+class ClassGeneric<T,K>{
+  private _name: T
+  private _age: K
+  constructor(name:T, age:K)
+  {
+    this._age = age
+    this._name = name
+  }
+}
+```
