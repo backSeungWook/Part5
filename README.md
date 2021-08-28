@@ -310,7 +310,7 @@ console.log(helloGeneric('Mark'))
 //function helloGeneric<0>(message: 0): 0
 console.log(helloGeneric(0))
 let tboolean:boolean = true
-//function helloGeneric<true>(message: true): true
+//function helloGeneric<true>(message: true): trGenericsue
 console.log(helloGeneric(tboolean))
 
 //Array
@@ -342,5 +342,57 @@ class ClassGeneric<T,K>{
     this._age = age
     this._name = name
   }
+}
+```
+### Generics Extends
+제네릭에서의 Extends 클래스의 Extends와는 조금 다른 개념.
+extends string | number 지정 하면 string , number 형태의 값만 넣을 수 있음.
+```ts
+//T = string 과 number 만 가능 
+//제네릭에서 변수 형태를 작은 단위로 지정.
+//사용자가 최소한의 변수를 보고 값을 넣을 수 있게.
+class PersonExtends<T extends string| number>{
+  private _nameExtends: T
+
+  constructor(nameExtends:T ){
+    this._nameExtends = nameExtends
+  }
+}
+
+new PersonExtends("213213")
+new PersonExtends(213213)
+
+//'boolean' 형식의 인수는 'string | number' 
+//형식의 매개 변수에 할당될 수 없습니다.
+//new PersonExtends(true) ERR 발생 
+```
+### keyof & type lookup System
+`컴파일에서 Type을 적절히 찾아 낼 수 있는 방식.`  
+keyof : 해당 개체의 Key 값이 유니온 형태로 반환  
+Ex) IPersonLookup 의ipName / ipAge
+```ts
+interface IPersonLookup{
+  ipName: string,
+  ipAge: number
+}
+
+const lookupPerson: IPersonLookup = {
+  ipName:"Mark",
+  ipAge:30
+}
+
+//IPersonLookup[Keys] 
+//==> IPersonLookup["name" | "age"] 
+//==> IPersonLookup["name"]  |IPersonLookup ["age"] 
+//==> string | number
+
+function getProp<T, K extends keyof T>(obj:T, key:K): T[K]{
+  return obj[key]
+} //  `string | number 아닌` 정확한 유니온 형태로 반환 Ex) ipName ipAge
+
+console.log(getProp(lookupPerson2,"ipName2"))
+
+function setProp<T, K extends keyof T>(obj:T,key:K,value: T[K]):void {
+  obj[key] = value;
 }
 ```
